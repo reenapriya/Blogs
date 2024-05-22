@@ -8,8 +8,9 @@ export default function Register({registerIn}){
         username:"",
         email:"",
         password:"",
-        profilePic:"",
+        profilePic:null,
         bio:"",
+
         serverErrors:null,
         clientErrors:{}
     })
@@ -51,8 +52,14 @@ export default function Register({registerIn}){
 
     const handleSubmit=async(e)=>{
         e.preventDefault()
-        const formData=_.pick(form,["username","email","password","bio"])
-        console.log(formData)
+        //const FormData=_.pick(form,["username","email","password","bio","profilePic"])
+        //console.log(formData)
+        const formData = new FormData();
+        formData.append('username', form.username);
+        formData.append('email', form.email);
+        formData.append('password', form.password);
+        formData.append('bio', form.bio);
+        formData.append('profilePic', form.profilePic);
 
         runValidations()
 
@@ -72,12 +79,16 @@ export default function Register({registerIn}){
         
         
     }
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        setForm({...form,profilePic:file});
+      };
     return (
         <div>
             <h1>Register Here</h1>
 
             { form.serverErrors && displayErrors() } 
-            <form onSubmit={handleSubmit}>
+            <form encType="multipart/form-data" onSubmit={handleSubmit}>
            
                 <label htmlFor="username"> Enter Username </label>
                 <input type="text"
@@ -109,6 +120,12 @@ export default function Register({registerIn}){
                   value={form.bio}
                   id="bio"/>
                    { form.clientErrors.bio&& <span> { form.clientErrors.bio } </span>}
+                  <br/>
+                 <label >Update-profile</label>
+                 <input type="file"
+                  name="profilePic"
+                  onChange={handleFileChange}
+                  />
                   <br/>
 
                   <input type="submit"/>
