@@ -9,6 +9,7 @@ import {useAuth}from "./context/AuthContext"
 import axios from "./config/axios"
 import PrivateRouter from './component/PrivateRoute';
 import { useEffect } from 'react';
+import Dashboard from './component/Dashboard';
 
 function App() {
   const {user,dispatch}=useAuth()
@@ -19,7 +20,10 @@ function App() {
    const loggedIn=()=>{
       toast("successfully logged !!")
        }
-
+       const postIn=()=>{
+        toast("successfully posted !!")
+         }
+  
     useEffect(()=>{
       if(localStorage.getItem("token")){
         (async()=>{
@@ -71,6 +75,8 @@ function App() {
               <Account/>
             </PrivateRouter>
           }  />
+          <Route path="/dashboard" element={<Dashboard postIn={postIn}/>}  />
+
           
         </Routes>
       <ToastContainer/>

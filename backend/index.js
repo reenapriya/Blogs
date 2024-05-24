@@ -57,6 +57,7 @@ const configurationDb = require("./configure/db");
 const userCtrl = require("./app/controller/user-ctrl");
 const postCtrl=require("./app/controller/post-ctrl")
 const commentCtrl=require("./app/controller/comment-ctrl")
+//const upload = require('./app/middleware/uploads')
 const cors = require("cors");
 const helmet = require("helmet");
 const multer = require('multer');
@@ -73,7 +74,7 @@ app.use(express.json());
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms', { stream: accessLogStream }));
 
-// Ensure the upload directory exists
+//Ensure the upload directory exists
 const uploadDir = path.join(__dirname, 'images');
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
@@ -82,16 +83,19 @@ if (!fs.existsSync(uploadDir)) {
 // Static file serving
 app.use('/images', express.static(uploadDir));
 
-// Multer setup for file uploads
+//Multer setup for file uploads
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, uploadDir);
     },
     filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname));
-    }
-});
-const upload = multer({ storage: storage });
+        cb(null, Date.now() + path.extname(file.originalname));     }
+ });
+ const upload = multer({ storage: storage });
+
+
+// Static file serving
+app.use('/images', express.static(uploadDir));
 
 // Database configuration
 configurationDb();
