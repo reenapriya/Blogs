@@ -9,9 +9,17 @@ postCtrl.create=async(req,res)=>{
     if(!errors.isEmpty()){
         return res.status(400).json({errors:errors.array()})
     }
-    const body=req.body
+    // const body=req.body
+    const { title, content } = req.body;
+    const postImage = req.files ? req.files.map(file => file.path) : []
     try{
-        const post=new Post(body)
+           const post=new Post({
+            title,
+            content,
+            postImage :postImage,
+
+           })
+       // const post=new Post(body)
         post.author=req.user.id
         await post.save()
         console.log("post",post)

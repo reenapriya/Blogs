@@ -24,7 +24,7 @@ userCtrl.register=async(req,res)=>{
             email: body.email,
             password: hashPassword,
             bio: body.bio,
-            profilePic: req.file ? req.file.filename : null // Set profilePic if file is uploaded
+           // profilePic: req.file ? req.file.filename : null // Set profilePic if file is uploaded
         });
         //const user=new User(body)
         user.password=hashPassword
@@ -83,23 +83,17 @@ userCtrl.update=async(req,res)=>{
     try{
         const user=await User.findByIdAndUpdate(req.user.id,body,{new:true})
         console.log(user)
-        if(user.password){
-
-        const salt=await bcryptjs.genSalt()
-        const hashPassword=await bcryptjs.hash(user.password,salt)
-        console.log("hasshPassword",hashPassword)
-        //const user=new User(body)
-        user.password=hashPassword
         
-        await user.save()
+        
         return res.status(201).json(user)
         
-        }else{
-        return res.status(201).json(user)
-    }}
+        
+    }
     catch(e){
         console.log(e)
         return res.json("internal error")
     }
 }
+
+
 module.exports=userCtrl

@@ -84,53 +84,78 @@ export default function Register({registerIn}){
         setForm({...form,profilePic:file});
       };
     return (
-        <div>
-            <h1>Register Here</h1>
+        <div style={{ maxWidth: '400px', margin: 'auto', padding: '20px' }}>
+            <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>Register Here</h1>
 
             { form.serverErrors && displayErrors() } 
             <form encType="multipart/form-data" onSubmit={handleSubmit}>
            
-                <label htmlFor="username"> Enter Username </label>
+                <label style={labelStyle} htmlFor="username"> Enter Username </label>
                 <input type="text"
                   onChange={e=>setForm({...form,username:e.target.value})}
                   id="username"
                   value={form.username}
+                  style={inputStyle}
                   />
                    { form.clientErrors.username && <span> { form.clientErrors.username } </span>}
                   <br/>
-                  <label htmlFor="email">Enter Email</label>
+                  <label style={labelStyle}htmlFor="email">Enter Email</label>
                   <input type="text"
                   onChange={e=>setForm ({...form,email:e.target.value})}
                   id="email"
-                  value={form.email}/>
+                  value={form.email}
+                  style={inputStyle}/>
                    { form.clientErrors.email && <span> { form.clientErrors.email } </span>}
                   <br/>
 
-                  <label htmlFor="password">Enter password</label>
+                  <label  style={labelStyle}htmlFor="password">Enter password</label>
                   <input type="text"
                   onChange={e=>setForm({...form,password:e.target.value})}
                   value={form.password}
-                  id="password"/>
+                  id="password"
+                  style={inputStyle}/>
                    { form.clientErrors.password && <span> { form.clientErrors.password } </span>}
                   <br/>
                 
-                  <label htmlFor="bio">Bio</label>
+                  <label   style={labelStyle}htmlFor="bio">Bio</label>
                   < input type="textarea"
                   onChange={e=>setForm({...form,bio:e.target.value})}
                   value={form.bio}
-                  id="bio"/>
+                  id="bio"
+                  style={inputStyle}/>
                    { form.clientErrors.bio&& <span> { form.clientErrors.bio } </span>}
                   <br/>
-                 <label >Update-profile</label>
+                 <label style={labelStyle} >Update-profile</label>
                  <input type="file"
                   name="profilePic"
                   onChange={handleFileChange}
+                  style={inputStyle}
                   />
                   <br/>
 
-                  <input type="submit"/>
+                  <input type="submit" 
+                  style={{
+                    padding: '10px',
+                    backgroundColor: '#323ca8',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                  }}/>
             </form>
         </div>
 
     )
 }
+const labelStyle = {
+    display: 'block',
+    marginBottom: '5px',
+    fontWeight: 'bold',
+  };
+  
+  const inputStyle = {
+    width: '100%',
+    padding: '8px',
+    margin: '5px 0',
+    boxSizing: 'border-box',
+  };

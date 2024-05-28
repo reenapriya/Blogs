@@ -15,6 +15,9 @@ const reducer=(state,action)=>{
         case "LOGOUT":{
                return {...state, account:null,isLoggedIn: false,}
         }
+        // case "SET_ALLPOST":{
+        //     return {...state,account :action.payload.account,posts:action.payload.posts}
+        // }
         default:{
             return {...state}
         }

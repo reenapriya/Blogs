@@ -18,7 +18,7 @@ const postSchema=new Schema({
 
     }],
 
-    postImage:String
+    postImage:[String]
 },{timestamps:true})
 
 const Post=model("Post",postSchema)

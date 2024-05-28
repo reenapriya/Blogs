@@ -57,7 +57,7 @@ const configurationDb = require("./configure/db");
 const userCtrl = require("./app/controller/user-ctrl");
 const postCtrl=require("./app/controller/post-ctrl")
 const commentCtrl=require("./app/controller/comment-ctrl")
-//const upload = require('./app/middleware/uploads')
+const upload = require('./app/middleware/uploads')
 const cors = require("cors");
 const helmet = require("helmet");
 const multer = require('multer');
@@ -70,32 +70,35 @@ app.use(cors());
 app.use(helmet());
 app.use(express.json());
 
+
 // Morgan logging setup
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms', { stream: accessLogStream }));
 
 //Ensure the upload directory exists
-const uploadDir = path.join(__dirname, 'images');
-if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
-}
+// const uploadDir = path.join(__dirname, 'images');
+// if (!fs.existsSync(uploadDir)) {
+//     fs.mkdirSync(uploadDir, { recursive: true });
+// }
 
 // Static file serving
-app.use('/images', express.static(uploadDir));
 
 //Multer setup for file uploads
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, uploadDir);
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname));     }
- });
- const upload = multer({ storage: storage });
+// const storage = multer.diskStorage({
+//     destination: (req, file, cb) => {
+//         cb(null, uploadDir);
+//     },
+//     filename: (req, file, cb) => {
+//         cb(null, Date.now() + path.extname(file.originalname));     }
+//  });
+//  const upload = multer({ storage: storage });
+
+
+ app.use('/images', express.static(path.join(__dirname,"uploads")));
 
 
 // Static file serving
-app.use('/images', express.static(uploadDir));
+//app.use('/images', express.static(uploadDir));
 
 // Database configuration
 configurationDb();
@@ -104,10 +107,10 @@ configurationDb();
 app.post("/api/users/register", upload.single('profilePic'), checkSchema(userRegisterValidation), userCtrl.register);
 app.post("/api/users/login", checkSchema(userLoginValidation), userCtrl.login);
 app.get("/api/users/account", authenticateUser, userCtrl.account);
-app.put("/api/users/update", authenticateUser, checkSchema(userUpdateValidation), userCtrl.update);
+app.put("/api/users/update", upload.single("profilePic"),authenticateUser, checkSchema(userUpdateValidation), userCtrl.update);
 
 //post routes
-app.post("/api/posts/create",authenticateUser,checkSchema(postValidation),postCtrl.create)
+app.post("/api/posts/create",upload.array("postImage","5"),authenticateUser,checkSchema(postValidation),postCtrl.create)
 app.get("/api/posts/showAll",postCtrl.retrieve)
 app.get("/api/posts/showOne/:PostId",postCtrl.retrieveOne)
 app.put("/api/posts/update/:id",authenticateUser,postCtrl.update)
@@ -120,11 +123,7 @@ app.get("/api/comments/:id/show",commentCtrl.get)
 app.put("/api/comments/:id/update/:commentId",authenticateUser,commentCtrl.update)
 app.delete("/api/comments/:id/delete/:commentId",authenticateUser,commentCtrl.delete)
 
-// Error handling middleware
-// app.use((err, req, res, next) => {
-//     console.error(err.stack);
-//     res.status(500).send({ error: 'Something went wrong!' });
-// });
+
 
 // Start the server
 app.listen(port, () => {

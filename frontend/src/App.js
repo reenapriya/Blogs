@@ -10,6 +10,10 @@ import axios from "./config/axios"
 import PrivateRouter from './component/PrivateRoute';
 import { useEffect } from 'react';
 import Dashboard from './component/Dashboard';
+import EditUser from './component/EditUser';
+import Allpost from './component/Allpost';
+import Mypost from './component/Mypost';
+import SinglePost from './component/SinglePost';
 
 function App() {
   const {user,dispatch}=useAuth()
@@ -27,17 +31,19 @@ function App() {
     useEffect(()=>{
       if(localStorage.getItem("token")){
         (async()=>{
-         const userResponse=await axios.get("/api/users/account",{
-          headers:{
-            Authorization:
-              localStorage.getItem("token")
-            
-          }
-         })
-         console.log(userResponse.data)
-        //  setTimeout(()=>{
-          dispatch({type:"LOGIN",payload:userResponse.data})
-        //  },2000)
+       try {const userResponse=await axios.get("/api/users/account",{
+        headers:{
+          Authorization:
+            localStorage.getItem("token")
+          
+        }
+        })
+        console.log(userResponse.data)
+        dispatch({type:"LOGIN",payload:{account:userResponse.data}})
+      }
+        catch(err){
+console.log(err)
+        }
         })();
       }
       },[])
@@ -58,6 +64,7 @@ function App() {
       </>) :(
       <>
        <Link to="/account">Account</Link>|
+       <Link to="/allposts">Posts</Link>|
         <Link to="/" onClick={()=>{
              localStorage.removeItem("token")
              dispatch({type:"LOGOUT"})
@@ -76,7 +83,10 @@ function App() {
             </PrivateRouter>
           }  />
           <Route path="/dashboard" element={<Dashboard postIn={postIn}/>}  />
-
+          <Route path="/editUser" element={<EditUser/>}  />
+          <Route path="/allposts" element={<Allpost/>}  />
+          <Route path="/myposts" element={<Mypost/>}  />
+          <Route path="/api/posts/showOne/:PostId" element={<SinglePost/>}  />
           
         </Routes>
       <ToastContainer/>

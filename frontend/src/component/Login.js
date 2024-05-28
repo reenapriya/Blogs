@@ -42,28 +42,37 @@ export default function Login ({loggedIn}){
         }
     })
     return (
-        <div>
-           <h1>Login Here</h1>
-           {serverErrors && <b>
+        <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
+           <h1 style={{ color: '#333' }}>Login Here</h1>
+           {serverErrors && <b style={{ color: 'red' }}>
             {serverErrors}</b>}
 
             <form onSubmit={formik.handleSubmit}>
-                <label>Enter Email</label>
+                <label style={{ marginRight: '10px' }}>Enter Email</label>
                 <input type="text"
                 value={formik.values.email}
                 name="email"
-                onChange={formik.handleChange}/>
+                onChange={formik.handleChange}
+                style={{ padding: '5px', marginBottom: '10px' }}/>
                 {formik.errors.email}
                 <br/>
 
-                <label>Enter Password</label>
-                <input type="text"
+                <label style={{ padding: '5px', marginBottom: '10px' }}>Enter Password</label>
+                <input type="password"
                 value={formik.values.password}
                 name="password"
-                onChange={formik.handleChange}/>
+                onChange={formik.handleChange}
+                style={{ padding: '5px', marginBottom: '10px' }}/>
                 {formik.errors.password}
                 <br/>
-                <input type="submit"/>
+                <input type="submit" style={{
+            padding: '8px',
+            backgroundColor: '#4CAF50',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+          }}/>
             </form>
         </div>
     )
